@@ -86,6 +86,9 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+vim.opt.shadafile="NONE"
+vim.cmd(":set number relativenumber");
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -255,9 +258,6 @@ local on_attach = function(_, bufnr)
   nmap('<leader>wl', function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, '[W]orkspace [L]ist Folders')
-
-  nmap('<leader>w<C-n>o', vim.cmd('Neotree show'), 'Neotree [o]pen')
-  nmap('<leader>w<C-n>c', vim.cmd('Neotree close'), 'Neotree [c]lose')
 
   -- Create a command `:Format` local to the LSP buffer
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
@@ -435,8 +435,47 @@ require("neo-tree").setup({
         "*.csproj"
       }
     }
+  },
+  popup_border_style = "rounded",
+  window = {
+    position = "float"
   }
 })
 
-vim.keymap.set('n', '<leader>o', vim.cmd('Neotree show position=left'), { desc = 'neo[t]ree [o]pen' })
-vim.keymap.set('n', '<leader>c', vim.cmd('Neotree close'), { desc = 'neo[t]ree [c]lose' })
+vim.keymap.set("n", "<C-t>o", function () vim.cmd("Neotree toggle")end)
+
+
+local harpoon = require("harpoon")
+harpoon:setup();
+
+vim.keymap.set("n", "<C-h>a", function() harpoon:list():add() end)
+vim.keymap.set("n", "<C-h>e", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+
+vim.keymap.set("n", "<C-h>1", function() harpoon:list():select(1) end)
+vim.keymap.set("n", "<C-h>2", function() harpoon:list():select(2) end)
+vim.keymap.set("n", "<C-h>3", function() harpoon:list():select(3) end)
+vim.keymap.set("n", "<C-h>4", function() harpoon:list():select(4) end)
+
+-- Toggle previous & next buffers stored within Harpoon list
+vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end)
+vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
+
+local conf = require("telescope.config").values
+local function toggle_telescope(harpoon_files)
+    local file_paths = {}
+    for _, item in ipairs(harpoon_files.items) do
+        table.insert(file_paths, item.value)
+    end
+
+    require("telescope.pickers").new({}, {
+        prompt_title = "Harpoon",
+        finder = require("telescope.finders").new_table({
+            results = file_paths,
+        }),
+        previewer = conf.file_previewer({}),
+        sorter = conf.generic_sorter({}),
+    }):find()
+end
+
+vim.keymap.set("n", "<C-e>", function() toggle_telescope(harpoon:list()) end,
+    { desc = "Open harpoon window" })
