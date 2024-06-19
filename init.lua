@@ -274,7 +274,7 @@ require('which-key').register {
   ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
   ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-  ['<leader>w<C-n>'] = { name = 'Neo[T]ree', _ = 'which_key_ignore' },
+  ['<leader>w<C-n>'] = { name = 'Neo[T]ree', _ = 'which_key_ignore' }
 }
 
 -- mason-lspconfig requires that these setup functions are called in this order
@@ -446,15 +446,22 @@ vim.keymap.set("n", "<C-t>o", function () vim.cmd("Neotree toggle")end)
 
 
 local harpoon = require("harpoon")
+local extensions = require("harpoon.extensions");
 harpoon:setup();
 
-vim.keymap.set("n", "<C-h>a", function() harpoon:list():add() end)
-vim.keymap.set("n", "<C-h>e", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+vim.keymap.set("n", "<C-h>a", function() harpoon:list():add() end, { desc = "add"})
+vim.keymap.set("n", "<C-h>e", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, {desc = "show list"})
 
-vim.keymap.set("n", "<C-h>1", function() harpoon:list():select(1) end)
-vim.keymap.set("n", "<C-h>2", function() harpoon:list():select(2) end)
-vim.keymap.set("n", "<C-h>3", function() harpoon:list():select(3) end)
-vim.keymap.set("n", "<C-h>4", function() harpoon:list():select(4) end)
+function Showvalue(index)
+  if(harpoon:list():get(index)) then
+    return harpoon:list():get(index).value;
+  end
+end
+
+vim.keymap.set("n", "<C-h>1", function() harpoon:list():select(1) end, { desc = (Showvalue(1)) })
+vim.keymap.set("n", "<C-h>2", function() harpoon:list():select(2) end, { desc = (Showvalue(2)) })
+vim.keymap.set("n", "<C-h>3", function() harpoon:list():select(3) end, { desc = (Showvalue(3)) })
+vim.keymap.set("n", "<C-h>4", function() harpoon:list():select(4) end, { desc = (Showvalue(4)) })
 
 -- Toggle previous & next buffers stored within Harpoon list
 vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end)
@@ -479,3 +486,9 @@ end
 
 vim.keymap.set("n", "<C-e>", function() toggle_telescope(harpoon:list()) end,
     { desc = "Open harpoon window" })
+
+
+
+
+
+
