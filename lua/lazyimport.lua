@@ -180,14 +180,23 @@ require('lazy').setup({
       -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
     }
   },
-  {
-    "ThePrimeagen/harpoon",
+{
+    "theprimeagen/harpoon",
+    dependencies = { "nvim-lua/plenary.nvim" },
     branch = "harpoon2",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
+    config = function()
+      require("harpoon"):setup()
+    end,
+    keys = {
+      { "<leader>Ha", function() require("harpoon"):list():add() end, desc = "harpoon file", },
+      { "<leader>He", function() local harpoon = require("harpoon") harpoon.ui:toggle_quick_menu(harpoon:list()) end, desc = "harpoon quick menu", },
+      { "<leader>H1", function() require("harpoon"):list():select(1) end, desc = "harpoon to file 1", },
+      { "<leader>H2", function() require("harpoon"):list():select(2) end, desc = "harpoon to file 2", },
+      { "<leader>H3", function() require("harpoon"):list():select(3) end, desc = "harpoon to file 3", },
+      { "<leader>H4", function() require("harpoon"):list():select(4) end, desc = "harpoon to file 4", },
+      { "<leader>H5", function() require("harpoon"):list():select(5) end, desc = "harpoon to file 5", },
     },
   }
-
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.

@@ -445,50 +445,6 @@ require("neo-tree").setup({
 vim.keymap.set("n", "<C-t>o", function () vim.cmd("Neotree toggle")end)
 
 
-local harpoon = require("harpoon")
-local extensions = require("harpoon.extensions");
-harpoon:setup();
-
-vim.keymap.set("n", "<C-h>a", function() harpoon:list():add() end, { desc = "add"})
-vim.keymap.set("n", "<C-h>e", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, {desc = "show list"})
-
-function Showvalue(index)
-  if(harpoon:list():get(index)) then
-    return harpoon:list():get(index).value;
-  end
-end
-
-vim.keymap.set("n", "<C-h>1", function() harpoon:list():select(1) end, { desc = (Showvalue(1)) })
-vim.keymap.set("n", "<C-h>2", function() harpoon:list():select(2) end, { desc = (Showvalue(2)) })
-vim.keymap.set("n", "<C-h>3", function() harpoon:list():select(3) end, { desc = (Showvalue(3)) })
-vim.keymap.set("n", "<C-h>4", function() harpoon:list():select(4) end, { desc = (Showvalue(4)) })
-
--- Toggle previous & next buffers stored within Harpoon list
-vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end)
-vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
-
-local conf = require("telescope.config").values
-local function toggle_telescope(harpoon_files)
-    local file_paths = {}
-    for _, item in ipairs(harpoon_files.items) do
-        table.insert(file_paths, item.value)
-    end
-
-    require("telescope.pickers").new({}, {
-        prompt_title = "Harpoon",
-        finder = require("telescope.finders").new_table({
-            results = file_paths,
-        }),
-        previewer = conf.file_previewer({}),
-        sorter = conf.generic_sorter({}),
-    }):find()
-end
-
-vim.keymap.set("n", "<C-e>", function() toggle_telescope(harpoon:list()) end,
-    { desc = "Open harpoon window" })
-
-
-
 
 
 
