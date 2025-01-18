@@ -105,11 +105,8 @@ require('lazy').setup({
       end,
     },
   },
-
-{ 
-    "catppuccin/nvim",
-    name = "catppuccin",
-    priority = 1000 },
+  -- add dracula
+  { "Mofiqul/dracula.nvim" },
 
   {
     -- Set lualine as statusline
